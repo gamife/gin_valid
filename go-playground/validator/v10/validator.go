@@ -182,7 +182,7 @@ func (v *validate) traverseField(ctx context.Context, parent reflect.Value, curr
 					v.cf = cf
 					v.ct = ct
 
-					if !ct.fn(ctx, v) {
+					if ok, m := ct.fn(ctx, v); !ok {
 						v.str1 = string(append(ns, cf.altName...))
 
 						if v.v.hasTagNameFunc {
@@ -193,17 +193,18 @@ func (v *validate) traverseField(ctx context.Context, parent reflect.Value, curr
 
 						v.errs = append(v.errs,
 							&fieldError{
-								v:              v.v,
-								tag:            ct.aliasTag,
-								actualTag:      ct.tag,
-								ns:             v.str1,
-								structNs:       v.str2,
-								fieldLen:       uint8(len(cf.altName)),
-								structfieldLen: uint8(len(cf.name)),
-								value:          current.Interface(),
-								param:          ct.param,
-								kind:           kind,
-								typ:            typ,
+								ExtraErrorParam: m,
+								v:               v.v,
+								tag:             ct.aliasTag,
+								actualTag:       ct.tag,
+								ns:              v.str1,
+								structNs:        v.str2,
+								fieldLen:        uint8(len(cf.altName)),
+								structfieldLen:  uint8(len(cf.name)),
+								value:           current.Interface(),
+								param:           ct.param,
+								kind:            kind,
+								typ:             typ,
 							},
 						)
 						return
@@ -254,7 +255,7 @@ OUTER:
 			v.cf = cf
 			v.ct = ct
 
-			if !hasValue(v) {
+			if ok, _ := hasValue(v); !ok {
 				return
 			}
 
@@ -358,8 +359,8 @@ OUTER:
 				v.flField = current
 				v.cf = cf
 				v.ct = ct
-
-				if ct.fn(ctx, v) {
+				ok, m := ct.fn(ctx, v)
+				if ok {
 
 					// drain rest of the 'or' values, then continue or leave
 					for {
@@ -398,17 +399,18 @@ OUTER:
 
 						v.errs = append(v.errs,
 							&fieldError{
-								v:              v.v,
-								tag:            ct.aliasTag,
-								actualTag:      ct.actualAliasTag,
-								ns:             v.str1,
-								structNs:       v.str2,
-								fieldLen:       uint8(len(cf.altName)),
-								structfieldLen: uint8(len(cf.name)),
-								value:          current.Interface(),
-								param:          ct.param,
-								kind:           kind,
-								typ:            typ,
+								ExtraErrorParam: m,
+								v:               v.v,
+								tag:             ct.aliasTag,
+								actualTag:       ct.actualAliasTag,
+								ns:              v.str1,
+								structNs:        v.str2,
+								fieldLen:        uint8(len(cf.altName)),
+								structfieldLen:  uint8(len(cf.name)),
+								value:           current.Interface(),
+								param:           ct.param,
+								kind:            kind,
+								typ:             typ,
 							},
 						)
 
@@ -418,17 +420,18 @@ OUTER:
 
 						v.errs = append(v.errs,
 							&fieldError{
-								v:              v.v,
-								tag:            tVal,
-								actualTag:      tVal,
-								ns:             v.str1,
-								structNs:       v.str2,
-								fieldLen:       uint8(len(cf.altName)),
-								structfieldLen: uint8(len(cf.name)),
-								value:          current.Interface(),
-								param:          ct.param,
-								kind:           kind,
-								typ:            typ,
+								ExtraErrorParam: m,
+								v:               v.v,
+								tag:             tVal,
+								actualTag:       tVal,
+								ns:              v.str1,
+								structNs:        v.str2,
+								fieldLen:        uint8(len(cf.altName)),
+								structfieldLen:  uint8(len(cf.name)),
+								value:           current.Interface(),
+								param:           ct.param,
+								kind:            kind,
+								typ:             typ,
 							},
 						)
 					}
@@ -447,7 +450,7 @@ OUTER:
 			v.cf = cf
 			v.ct = ct
 
-			if !ct.fn(ctx, v) { // 这是 验证函数的进行校验, 不成功就会记录下来
+			if ok, m := ct.fn(ctx, v); !ok { // 这是 验证函数的进行校验, 不成功就会记录下来
 
 				v.str1 = string(append(ns, cf.altName...)) //如果不想要 命名空间,就不要拼接 ns
 
@@ -459,17 +462,18 @@ OUTER:
 
 				v.errs = append(v.errs,
 					&fieldError{
-						v:              v.v,
-						tag:            ct.aliasTag,
-						actualTag:      ct.tag,
-						ns:             v.str1,
-						structNs:       v.str2,
-						fieldLen:       uint8(len(cf.altName)),
-						structfieldLen: uint8(len(cf.name)),
-						value:          current.Interface(),
-						param:          ct.param,
-						kind:           kind,
-						typ:            typ,
+						ExtraErrorParam: m,
+						v:               v.v,
+						tag:             ct.aliasTag,
+						actualTag:       ct.tag,
+						ns:              v.str1,
+						structNs:        v.str2,
+						fieldLen:        uint8(len(cf.altName)),
+						structfieldLen:  uint8(len(cf.name)),
+						value:           current.Interface(),
+						param:           ct.param,
+						kind:            kind,
+						typ:             typ,
 					},
 				)
 

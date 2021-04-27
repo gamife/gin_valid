@@ -16,8 +16,8 @@ const (
 	defaultTagName        = "validate"
 	utf8HexComma          = "0x2C"
 	utf8Pipe              = "0x7C"
-	tagSeparator          = "," // tag参数 的分离符号,
-	orSeparator           = "|" // 或者 的分离符号
+	tagSeparator          = "," // 并且 的分离符号,多个条件时使用
+	orSeparator           = "|" // 或者 的分离符号,多个条件时使用
 	tagKeySeparator       = "="
 	structOnlyTag         = "structonly"
 	noStructLevelTag      = "nostructlevel"
@@ -77,7 +77,7 @@ type Validate struct {
 	tagNameFunc      TagNameFunc
 	structLevelFuncs map[reflect.Type]StructLevelFuncCtx
 	customFuncs      map[reflect.Type]CustomTypeFunc
-	aliases          map[string]string
+	aliases          map[string]string                            //tag的别名,可以将 r 表示为 required
 	validations      map[string]internalValidationFuncWrapper     // 每个 tag如 gte 都会对应一个func处理, 如果这个tag没有函数处理会报错
 	transTagFunc     map[ut.Translator]map[string]TranslationFunc // map[<locale>]map[<tag>]TranslationFunc
 	tagCache         *tagCache

@@ -2,10 +2,9 @@ package ut
 
 import (
 	"fmt"
+	"github.com/gamife/gin_valid/go-playground/locales"
 	"strconv"
 	"strings"
-
-	"github.com/gamife/gin_valid/go-playground/locales"
 )
 
 const (
@@ -300,7 +299,7 @@ func (t *translator) T(key interface{}, params ...string) (string, error) {
 	if !ok {
 		return unknownTranslation, ErrUnknowTranslation
 	}
-
+	// TODO:  buf池
 	b := make([]byte, 0, 64)
 
 	var start, end, count int

@@ -94,7 +94,7 @@ type cTag struct {
 	hasTag               bool
 	hasAlias             bool
 	hasParam             bool // true if parameter used eg. eq= where the equal sign has been set
-	isBlockEnd           bool // indicates the current tag represents the last validation in the block , 表示当前field的最后一个,比如 `require,gte=10`,那么到gte就是true
+	isBlockEnd           bool // indicates the current tag represents the last validation in the block , 表示当前field的最后一个tag,比如 `require,gte=10`,那么到gte就是true
 	runValidationWhenNil bool
 }
 
@@ -167,8 +167,8 @@ func (v *Validate) extractStructCache(current reflect.Value, sName string) *cStr
 }
 
 func (v *Validate) parseFieldTagsRecursive(tag string, fieldName string, alias string, hasAlias bool) (firstCtag *cTag, current *cTag) {
-	var t string
-	noAlias := len(alias) == 0
+	var t string               // 最开始如果有别名,比如 r 代表 required,那么t为 `r`,如果有多个条件  gte=1,gt=10   那么 t 依次等于 gte=1  gt=10
+	noAlias := len(alias) == 0 // 别名这个东西,只是用来 判断当前是否是别名转过来的
 	tags := strings.Split(tag, tagSeparator)
 
 	for i := 0; i < len(tags); i++ {
@@ -183,8 +183,7 @@ func (v *Validate) parseFieldTagsRecursive(tag string, fieldName string, alias s
 				firstCtag, current = v.parseFieldTagsRecursive(tagsVal, fieldName, t, true)
 			} else {
 				next, curr := v.parseFieldTagsRecursive(tagsVal, fieldName, t, true)
-				current.next, current = next, curr
-
+				current.next, current = next, curr //链表,可能返回的是一串,比如  123  接  456, current=3  接 next=4 ,current.next=curr=6
 			}
 			continue
 		}
@@ -294,6 +293,7 @@ func (v *Validate) parseFieldTagsRecursive(tag string, fieldName string, alias s
 				}
 
 				if len(vals) > 1 {
+					// 转义
 					current.param = strings.Replace(strings.Replace(vals[1], utf8HexComma, ",", -1), utf8Pipe, "|", -1)
 				}
 			}

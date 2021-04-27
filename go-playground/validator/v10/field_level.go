@@ -5,6 +5,8 @@ import "reflect"
 // FieldLevel contains all the information and helper functions
 // to validate a field
 type FieldLevel interface {
+	Validator() *Validate
+
 	// returns the top level struct, if any
 	Top() reflect.Value
 
@@ -62,7 +64,7 @@ type FieldLevel interface {
 	GetStructFieldOKAdvanced2(val reflect.Value, namespace string) (reflect.Value, reflect.Kind, bool, bool)
 }
 
-var _ FieldLevel = new(validate)
+//var _ FieldLevel = new(validate)
 
 // Field returns current field for validation
 func (v *validate) Field() reflect.Value {

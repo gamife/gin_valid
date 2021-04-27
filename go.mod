@@ -3,7 +3,8 @@ module github.com/gamife/gin_valid
 go 1.13
 
 require (
-	github.com/go-playground/assert/v2 v2.0.1 // indirect
+	//git.ningdatech.com/ningda/gin_valid v0.4.6 // indirect
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/golang/protobuf v1.4.3
 	github.com/json-iterator/go v1.1.10
 	github.com/leodido/go-urn v1.2.0

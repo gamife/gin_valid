@@ -812,11 +812,11 @@ func RegisterDefaultTranslations(v *validator.Validate, trans ut.Translator) (er
 		},
 		{
 			tag:         "eqfield",
-			translation: "{0}必须等于{1}",
+			translation: "{0}必须与{1}一致",
 			override:    false,
 			customTransFunc: func(ut ut.Translator, fe validator.FieldError) string {
-
-				t, err := ut.T(fe.Tag(), fe.Field(), fe.Param())
+				param := fe.ErrorParam()
+				t, err := ut.T(fe.Tag(), param[0], param[1])
 				if err != nil {
 					log.Printf("警告: 翻译字段错误: %#v", fe)
 					return fe.(error).Error()

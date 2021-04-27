@@ -83,16 +83,17 @@ type TransValidError struct {
 	ErrorString string
 }
 
-func (e TransValidError) Error() string {
+func (e *TransValidError) Error() string {
 	return e.ErrorString
 }
 func (ve ValidationErrors) Translate(ut ut.Translator) error {
-	var result TransValidError
+	var result *TransValidError
 	var fe *fieldError
 	if len(ve) == 0 {
 		return result
 	}
 	fe = ve[0].(*fieldError)
+	result = new(TransValidError)
 	result.ErrorString = fe.Translate(ut)
 	return result
 }
@@ -101,6 +102,7 @@ func (ve ValidationErrors) Translate(ut ut.Translator) error {
 
 // FieldError contains all functions to get error details
 type FieldError interface {
+	ErrorParam() []string
 
 	// returns the validation tag that failed. if the
 	// validation was an alias, this will return the
@@ -188,17 +190,18 @@ var _ error = new(fieldError)
 // with other properties that may be needed for error message creation
 // it complies with the FieldError interface
 type fieldError struct {
-	v              *Validate
-	tag            string
-	actualTag      string
-	ns             string
-	structNs       string
-	fieldLen       uint8
-	structfieldLen uint8
-	value          interface{}
-	param          string
-	kind           reflect.Kind
-	typ            reflect.Type
+	v               *Validate
+	tag             string
+	actualTag       string
+	ns              string
+	structNs        string
+	fieldLen        uint8
+	structfieldLen  uint8
+	value           interface{}
+	param           string
+	kind            reflect.Kind
+	typ             reflect.Type
+	ExtraErrorParam []string
 }
 
 // Tag returns the validation tag that failed.
@@ -292,4 +295,8 @@ func (fe *fieldError) Translate(ut ut.Translator) string {
 	}
 
 	return fn(ut, fe)
+}
+
+func (fe *fieldError) ErrorParam() []string {
+	return fe.ExtraErrorParam
 }
